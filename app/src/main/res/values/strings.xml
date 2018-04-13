@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Spirala1</string>
+    <string name="nadji.sliku">Find picture</string>
+    <string name="kategorije">Categories </string>
+    <string name="autori">Authors</string>
+    <string name="pretraga">Search</string>
+    <string name="dodaj.kategoriju">Add category</string>
+    <string name="dodaj.knjigu">Add book</string>
+    <string name="ime.autora">Author's name: </string>
+    <string name="naziv.knjige">Book title: </string>
+    <string name="kategorija">Category: </string>
+    <string name="upisi.knjigu">Add book</string>
+    <string name="ponisti">Cancel</string>
+    <string name="povratak">Go back</string>
+
+
 </resources>

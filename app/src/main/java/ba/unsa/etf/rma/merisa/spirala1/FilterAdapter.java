@@ -98,7 +98,6 @@ public class FilterAdapter extends BaseAdapter implements Filterable {
                     if (u.toLowerCase().contentEquals(unos)) nlista.add(u.toString());
 
                     boolean a= u.toLowerCase().contentEquals(unos);
-                    TextView tv= (TextView) activity.findViewById(R.id.textView);
                 }
 
                 rezultati.count= nlista.size();

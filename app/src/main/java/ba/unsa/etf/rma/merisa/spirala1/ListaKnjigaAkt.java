@@ -1,4 +1,4 @@
-package ba.unsa.etf.rma.merisa.spirala1;
+/*package ba.unsa.etf.rma.merisa.spirala1;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
@@ -60,3 +60,4 @@ public class ListaKnjigaAkt extends AppCompatActivity {
         });
     }
 }
+*/

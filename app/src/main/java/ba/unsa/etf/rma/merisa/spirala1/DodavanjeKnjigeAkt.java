@@ -1,4 +1,4 @@
-package ba.unsa.etf.rma.merisa.spirala1;
+/*package ba.unsa.etf.rma.merisa.spirala1;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,6 +26,7 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
     Bitmap bitmap= null;
     ArrayList<Knjiga> knjige= new ArrayList<Knjiga>();
     ImageView dNadjiSliku;
+    Uri uri;
 
     public static Bitmap scaleDownBitmap(Bitmap photo, int newHeight, Context context) {
 
@@ -43,7 +46,7 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
-            Uri uri = data.getData();
+            uri = data.getData();
 
             try {
                 dNadjiSliku= (ImageView) findViewById(R.id.naslovnaStr);
@@ -54,6 +57,7 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 
@@ -120,3 +124,4 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
 
     }
 }
+*/

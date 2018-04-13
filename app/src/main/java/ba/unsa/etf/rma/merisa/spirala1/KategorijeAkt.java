@@ -1,7 +1,10 @@
 package ba.unsa.etf.rma.merisa.spirala1;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,91 +12,101 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class KategorijeAkt extends AppCompatActivity {
-
-    ArrayList<String> unosi=new ArrayList<String>();
-    ArrayList<Knjiga> knjige= new ArrayList<Knjiga>();
-    private static final int ACTIVITY_REQUEST_CODE = 1;
+public class KategorijeAkt extends AppCompatActivity implements ListeFragment.OnItemClick{
+    FragmentManager fragmentManager = getFragmentManager();
+    ArrayList<Knjiga> knjige=new ArrayList<Knjiga>();
+    ArrayList<Autor> autori= new ArrayList<Autor>();
+    ArrayList<String> kategorije= new ArrayList<String>();
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode ==ACTIVITY_REQUEST_CODE) {
-            if(resultCode == Activity.RESULT_OK){
-                knjige= data.getParcelableArrayListExtra("listaKnjiga");
-            }
+    public void onItemClickedAutor(ArrayList<String> k, int zadnjiKliknutA, ArrayList<Autor> autori, String imeAutora) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Configuration configuration = getResources().getConfiguration();
+
+        KnjigeFragment kf = new KnjigeFragment();
+        Bundle arg = new Bundle();
+        arg.putParcelableArrayList("listaAutora", autori);
+        arg.putString("odabraniAutor", imeAutora);
+        arg.putInt("zadnjiKliknutA", zadnjiKliknutA);
+        kf.setArguments(arg);
+        if (configuration.orientation== Configuration.ORIENTATION_LANDSCAPE )
+        {
+            fragmentTransaction.replace(R.id.mjesto2, kf).addToBackStack(null).commit();
+
         }
+        else {
+        fragmentTransaction.replace(R.id.f0, kf).addToBackStack(null).commit(); }
     }
+
+    @Override
+    public void onItemClickedKategorija(int zadnjiKliknutA, ArrayList<Knjiga> knjige, String kategorija) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Configuration configuration = getResources().getConfiguration();
+
+        KnjigeFragment kf = new KnjigeFragment();
+        Bundle arg = new Bundle();
+        arg.putInt("zadnjiKliknutA", zadnjiKliknutA);
+        arg.putParcelableArrayList("listaKnjiga", knjige);
+        arg.putString("nazivKategorije", kategorija);
+
+        kf.setArguments(arg);
+        if (configuration.orientation== Configuration.ORIENTATION_LANDSCAPE )
+        {
+            fragmentTransaction.replace(R.id.mjesto2, kf).addToBackStack(null).commit();
+
+        }
+        else {
+        fragmentTransaction.replace(R.id.f0, kf).addToBackStack(null).commit(); }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kategorije_akt);
-
-        ListView lista=(ListView)findViewById(R.id.listaKategorija);
-        final EditText unos=(EditText) findViewById(R.id.tekstPretraga);
-        Button dPretraga= (Button) findViewById(R.id.dPretraga);
-        final Button dDodajKategoriju= (Button) findViewById(R.id.dDodajKategoriju);
-        Button dDodajKnjigu= (Button) findViewById(R.id.dDodajKnjigu);
-        final ArrayAdapter<String> zaPrikaz=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, unosi);
-
-        final FilterAdapter adapter=new FilterAdapter(this, unosi);
-        lista.setAdapter(zaPrikaz);
+        Configuration configuration = getResources().getConfiguration();
 
 
-        dPretraga.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                adapter.getFilter().filter(unos.getText().toString());
+        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
 
+            FrameLayout frameLayout = (FrameLayout) findViewById(R.id.f0);
+
+            if (frameLayout != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                ListeFragment listeFragment;
+                listeFragment = (ListeFragment) fragmentManager.findFragmentById(R.id.f0);
+                if (listeFragment == null) {
+                    listeFragment = new ListeFragment();
+                    fragmentTransaction.replace(R.id.f0, listeFragment).addToBackStack(null).commit();
+                }
             }
-        });
+        }
 
-        dDodajKategoriju.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    unosi.add(unos.getText().toString());
-                    adapter.notifyDataSetChanged();
-                    zaPrikaz.notifyDataSetChanged();
-                    unos.setText("");
-                    dDodajKategoriju.setEnabled(false);
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ListeFragment listeFragment;
+            listeFragment = (ListeFragment) fragmentManager.findFragmentById(R.id.mjesto1);
 
+            if (listeFragment == null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                listeFragment = new ListeFragment();
+                fragmentTransaction.replace(R.id.mjesto1, listeFragment).commit();
             }
-        });
-
-        dDodajKnjigu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent myIntent = new Intent(KategorijeAkt.this, DodavanjeKnjigeAkt.class);
-                myIntent.putStringArrayListExtra("unosi", unosi);
-                myIntent.putParcelableArrayListExtra("knjige", knjige);
-                startActivityForResult(myIntent, ACTIVITY_REQUEST_CODE);
-            }
-        });
 
 
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Intent myIntent = new Intent(KategorijeAkt.this, ListaKnjigaAkt.class);
-                Bundle arg= new Bundle();
-                arg.putParcelableArrayList("listaKnjiga", knjige);
-                myIntent.putExtras(arg);
-                myIntent.putExtra("nazivKategorije",unosi.get(i));
-                KategorijeAkt.this.startActivity(myIntent);
-            }
-        });
-
+        }
 
     }
+
+
+
 }

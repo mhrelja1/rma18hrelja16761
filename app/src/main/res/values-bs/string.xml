@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nadji.sliku">Nadji sliku</string>
+    <string name="kategorije">Kategorije </string>
+    <string name="autori">Autori</string>
+    <string name="pretraga">Pretraga</string>
+    <string name="dodaj.kategoriju">Dodaj kategoriju</string>
+    <string name="dodaj.knjigu">Dodaj knjigu</string>
+    <string name="ime.autora">Ime autora: </string>
+    <string name="naziv.knjige">Naziv knjige: </string>
+    <string name="kategorija">Kategorija: </string>
+    <string name="upisi.knjigu">Upisi knjigu</string>
+    <string name="ponisti">Ponisti</string>
+    <string name="povratak">Povratak</string>
+
+
+
+</resources>

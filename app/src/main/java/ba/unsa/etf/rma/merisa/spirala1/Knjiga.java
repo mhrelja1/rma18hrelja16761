@@ -3,20 +3,21 @@ package ba.unsa.etf.rma.merisa.spirala1;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
 
 public class Knjiga implements Parcelable {
 
-    private Bitmap naslovnaStr;
+    private String naslovnaStr;
     private String imeAutora = "";
     private String nazivKnjige = "";
     private String kategorija= " ";
     private boolean selected;
     private View view;
 
-    public Knjiga ( Bitmap slika, String ime, String naziv, String kate, boolean selected)
+    public Knjiga ( String slika, String ime, String naziv, String kate, boolean selected)
     {
         naslovnaStr = slika;
         imeAutora = ime;
@@ -27,7 +28,7 @@ public class Knjiga implements Parcelable {
 
     protected Knjiga (Parcel in)
     {
-        naslovnaStr= in.readParcelable(Bitmap.class.getClassLoader());
+        naslovnaStr= in.readString();
         imeAutora = in.readString();
         nazivKnjige = in.readString();
         kategorija = in.readString();
@@ -55,13 +56,13 @@ public class Knjiga implements Parcelable {
     public String getImeAutora () { return imeAutora; }
     public String getNazivKnjige () { return nazivKnjige; }
     public String getKategorija() { return kategorija; }
-    public Bitmap getNaslovnaStr () { return naslovnaStr; }
+    public String getNaslovnaStr () { return naslovnaStr; }
     public View getView () {return view; }
 
     public void  setKategorija (String kate) { kategorija = kate; }
     public void  setImeAutora (String ime) { imeAutora = ime; }
     public void  setNazivKnjige (String naziv) { nazivKnjige = naziv; }
-    public void  setnaslovnaStr (Bitmap slika) { naslovnaStr = slika; }
+    public void  setnaslovnaStr (String  slika) { naslovnaStr = slika; }
     public void setSelected (boolean a) { selected = a; }
     public boolean isSelected () { return selected; }
     public void setView(View view) {this.view = view; }
@@ -70,7 +71,7 @@ public class Knjiga implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeParcelable(naslovnaStr, 0);
+        dest.writeString(naslovnaStr);
         dest.writeString(imeAutora);
         dest.writeString(nazivKnjige);
         dest.writeString(kategorija);

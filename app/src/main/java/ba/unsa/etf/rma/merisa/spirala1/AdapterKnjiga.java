@@ -3,6 +3,7 @@ package ba.unsa.etf.rma.merisa.spirala1;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+//import com.squareup.picasso.Picasso;
+
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -63,7 +69,9 @@ public class AdapterKnjiga extends BaseAdapter {
         else {
             holder= (ViewHolder) noviView.getTag();
         }
-        holder.img.setImageBitmap (knjige.get(position).getNaslovnaStr());
+        Glide.with(activity)
+                .load(knjige.get(position).getNaslovnaStr())
+                .into(holder.img);
         holder.autor.setText(knjige.get(position).getImeAutora());
         holder.naziv.setText(knjige.get(position).getNazivKnjige());
         if (knjige.get(position).isSelected()) noviView.setBackgroundColor(activity.getResources().getColor(R.color.plava));
