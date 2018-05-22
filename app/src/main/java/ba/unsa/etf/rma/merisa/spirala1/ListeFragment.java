@@ -31,12 +31,19 @@ public class ListeFragment extends Fragment {
     ArrayList<String> unosi=new ArrayList<String>();
 
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode==REQUEST_CODE && resultCode==getActivity().RESULT_OK) {
 
             knjige = data.getParcelableArrayListExtra("knjige");
             autori= data.getParcelableArrayListExtra("autori");
+        }
+        if (requestCode==5 && resultCode==getActivity().RESULT_OK) {
+
+            knjige = data.getParcelableArrayListExtra("knjige");
+            autori= data.getParcelableArrayListExtra("autori");
+
         }
     }
 
@@ -69,6 +76,23 @@ public class ListeFragment extends Fragment {
 
         final Configuration configuration= getActivity().getResources().getConfiguration();
 
+        Button dDodajOnline= (Button) iv.findViewById(R.id.dDodajOnline);
+        dDodajOnline.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                FragmentOnline fo=new FragmentOnline();
+                Bundle argumenti = new Bundle();
+                argumenti.putStringArrayList("unosi", unosi);
+                argumenti.putParcelableArrayList("knjige", knjige);
+                argumenti.putParcelableArrayList("autori", autori);
+
+                fo.setArguments(argumenti);
+                fo.setTargetFragment(ListeFragment.this, 5);
+                fragmentTransaction.replace(R.id.f0, fo).addToBackStack(null).commit();
+            }
+        });
 
 
         kategorija.setOnClickListener(new View.OnClickListener()

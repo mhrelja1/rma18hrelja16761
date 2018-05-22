@@ -46,7 +46,7 @@ public class KnjigeFragment extends Fragment {
 
             for (int i = 0; i < autori.size(); i++)
             { if (autori.get(i).getImeAutora().equals(odabraniAutor))
-                knjigeOdabranogAutora= autori.get(i).getKnjigeAutora(); }
+                knjigeOdabranogAutora= autori.get(i).getKnjige(); }
 
             AdapterKnjiga adapterKnjiga= new AdapterKnjiga(getActivity(), knjigeOdabranogAutora);
             listaKnjiga.setAdapter(adapterKnjiga);

@@ -69,12 +69,22 @@ public class AdapterKnjiga extends BaseAdapter {
         else {
             holder= (ViewHolder) noviView.getTag();
         }
+        if (knjige.get(position).getJedan()==false)
+        {
         Glide.with(activity)
-                .load(knjige.get(position).getNaslovnaStr())
+              .load(knjige.get(position).getSlika())
                 .into(holder.img);
-        holder.autor.setText(knjige.get(position).getImeAutora());
-        holder.naziv.setText(knjige.get(position).getNazivKnjige());
-        if (knjige.get(position).isSelected()) noviView.setBackgroundColor(activity.getResources().getColor(R.color.plava));
+        }
+        if (knjige.get(position).getJedan()==true)
+        {
+            Glide.with(activity)
+                    .load(knjige.get(position).getSlikaa())
+                    .into(holder.img);
+        }
+
+        holder.autor.setText(knjige.get(position).dajAutore());
+        holder.naziv.setText(knjige.get(position).getNaziv());
+        //if (knjige.get(position).isSelected()) noviView.setBackgroundColor(activity.getResources().getColor(R.color.plava));
 
         return noviView;
     }

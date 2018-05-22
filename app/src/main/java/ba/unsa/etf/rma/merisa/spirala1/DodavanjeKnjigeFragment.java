@@ -25,6 +25,9 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class DodavanjeKnjigeFragment extends Fragment{
@@ -96,31 +99,38 @@ public class DodavanjeKnjigeFragment extends Fragment{
                                             public void onClick (View v)
                                             {
 
-                                                knjige.add (new Knjiga ( uri.toString(), imeAutora.getText().toString(), nazivKnjige.getText().toString(), sKategorijaKnjige.getSelectedItem().toString(), false));
+                                                ArrayList<Knjiga> k = new ArrayList<Knjiga>();
+
+                                                Knjiga knj = new Knjiga(uri.toString(), nazivKnjige.getText().toString(), sKategorijaKnjige.getSelectedItem().toString());
+                                                knjige.add(knj);
+                                                k.add(knj);
+                                                Autor a = new Autor(imeAutora.getText().toString(), k);
+                                                knj.setAutor(a);
+
                                                 imeAutora.setText("");
                                                 nazivKnjige.setText("");
                                                 boolean isti=false;
 
                                                 if (knjige.size()==1) {
-                                                    ArrayList<Knjiga> listaKnjiga= new ArrayList<Knjiga>();
-                                                    listaKnjiga.add(knjige.get(0));
-                                                    autori.add(new Autor(knjige.get(0).getImeAutora(), listaKnjiga));
+                                                    ArrayList<Knjiga> listaKnjiga=new ArrayList<Knjiga>();
+                                                    listaKnjiga.add(knjige.get(knjige.size()-1));
+                                                    autori.add(new Autor (knjige.get(knjige.size()-1).getAutor().getImeAutora(), listaKnjiga));
                                                 }
                                                 else
                                                 {
                                                    for (int i=0; i<autori.size(); i++)
                                                    {
-                                                       if (autori.get(i).getImeAutora().equals(knjige.get(knjige.size()-1).getImeAutora()))
-                                                       {
-                                                           autori.get(i).dodajKnjigu(knjige.get(knjige.size()-1)); isti=true;
-                                                       }
+                                                    if (autori.get(i).getImeAutora().equals(knjige.get(knjige.size()-1).getAutor().getImeAutora())) {
+                                                        autori.get(i).dodajKnjigu(knjige.get(knjige.size() - 1));
+                                                        isti=true;
+                                                    }
 
                                                    }
-                                                   if (isti==false)
+                                                    if (isti==false)
                                                     {
-                                                        ArrayList<Knjiga> listaKnjiga= new ArrayList<Knjiga>();
+                                                        ArrayList<Knjiga> listaKnjiga=new ArrayList<Knjiga>();
                                                         listaKnjiga.add(knjige.get(knjige.size()-1));
-                                                        autori.add(new Autor(knjige.get(knjige.size()-1).getImeAutora(), listaKnjiga));
+                                                        autori.add(new Autor (knjige.get(knjige.size()-1).getAutor().getImeAutora(), listaKnjiga));
                                                     }
                                                 }
                                             }
