@@ -14,3 +14,13 @@
 +++++ Zadaci: 1, 2, 4
 +++++ Nije uraðeno:
 +++++ U trecem zadatku se ne prenose vec uneseni podaci kada se promijeni orijentacija i ponovo otvori ListeFragment, a DodavanjeKnjigeFragment se ne otvori preko cijelog layouta
++++++
++++++ Spirala 3
++++++ Uraðeno:
++++++ Zadaci: sve
++++++ Nije uraðeno: /
++++++
++++++ Spirala 4
++++++ Uraðeno:
++++++ Zadaci: sve
++++++ Nije uraðeno: /
