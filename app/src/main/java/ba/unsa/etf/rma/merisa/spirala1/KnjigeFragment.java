@@ -24,6 +24,7 @@ public class KnjigeFragment extends Fragment {
         int zadnjiKliknutA=0;
         Button povratak= (Button) iv.findViewById(R.id.dPovratak);
         final ListView listaKnjiga= (ListView) iv.findViewById(R.id.listaKnjiga);
+        final BazaOpenHelper bazaOpenHelper= new BazaOpenHelper(getActivity());
 
 
 
@@ -32,43 +33,32 @@ public class KnjigeFragment extends Fragment {
             zadnjiKliknutA= getArguments().getInt("zadnjiKliknutA");
         }
         if (zadnjiKliknutA==1) {
-            String odabraniAutor="";
-            ArrayList<Autor> autori = new ArrayList<Autor>();
+            int id=-1;
             ArrayList<Knjiga> knjigeOdabranogAutora = new ArrayList<Knjiga>();
 
 
-            if (getArguments().containsKey("listaAutora")) {
-                autori = getArguments().getParcelableArrayList("listaAutora");
-            }
-            if (getArguments().containsKey("odabraniAutor")) {
-                odabraniAutor = getArguments().getString("odabraniAutor");
+            if (getArguments().containsKey("id")) {
+                id = getArguments().getInt("id");
             }
 
-            for (int i = 0; i < autori.size(); i++)
-            { if (autori.get(i).getImeAutora().equals(odabraniAutor))
-                knjigeOdabranogAutora= autori.get(i).getKnjige(); }
+            knjigeOdabranogAutora= bazaOpenHelper.knjigeAutora(id+1);
 
             AdapterKnjiga adapterKnjiga= new AdapterKnjiga(getActivity(), knjigeOdabranogAutora);
             listaKnjiga.setAdapter(adapterKnjiga);
 
         }
 
-
         if (zadnjiKliknutA==2)
         {
             ArrayList<Knjiga> odabraneKnjige =new ArrayList<Knjiga>();
-            String kategorija="";
+            int id=1;
 
 
-            if (getArguments().containsKey("nazivKategorije"))
-            { kategorija = getArguments().getString("nazivKategorije"); }
-            if (getArguments().containsKey("listaKnjiga"))
-            { knjige = getArguments().getParcelableArrayList("listaKnjiga"); }
+            if (getArguments().containsKey("id"))
+            { id = getArguments().getInt("id"); }
 
-            for (int i=0; i<knjige.size(); i++)
-            {
-                if (kategorija.equals(knjige.get(i).getKategorija())) odabraneKnjige.add(knjige.get(i));
-            }
+            odabraneKnjige= bazaOpenHelper.knjigeKategorije(id+1);
+
 
             AdapterKnjiga adapterKnjiga= new AdapterKnjiga(getActivity(), odabraneKnjige);
             listaKnjiga.setAdapter(adapterKnjiga);

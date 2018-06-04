@@ -3,6 +3,8 @@ package ba.unsa.etf.rma.merisa.spirala1;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.BuddhistCalendar;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 import java.lang.reflect.Array;
@@ -101,7 +104,7 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
         super.onActivityCreated(savedInstanceState);
         ArrayList<String> kategorije= new ArrayList<String> ();
 
-        if (getArguments().containsKey("unosi"))
+       /* if (getArguments().containsKey("unosi"))
         {
             kategorije= getArguments().getStringArrayList("unosi");
         }
@@ -112,13 +115,19 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
         if (getArguments().containsKey("autori"))
         {
             autori= getArguments().getParcelableArrayList("autori");
-        }
+        }*/
+        final BazaOpenHelper bazaOpenHelper= new BazaOpenHelper(getActivity());
 
+        final SQLiteDatabase db= bazaOpenHelper.getReadableDatabase();
 
-        ArrayAdapter<String> aaa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, kategorije );
+        //ArrayAdapter<String> aaa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, kategorije );
+
+        Cursor c = db.rawQuery("SELECT  * FROM "+BazaOpenHelper.DATABASE_TABLE_KATE, null);
+        SimpleCursorAdapter simpleCursorAdapterK= new SimpleCursorAdapter( getActivity(), android.R.layout.simple_list_item_1 ,c, new String []{ BazaOpenHelper.KATEGORIJA_NAZIV }, new int []{ android.R.id.text1 }, 0 );
 
        final Spinner sKategorije= (Spinner)getView().findViewById(R.id.sKategorije);
-        sKategorije.setAdapter(aaa);
+       // sKategorije.setAdapter(aaa);
+        sKategorije.setAdapter(simpleCursorAdapterK);
 
 
         Button dPovratak = (Button) getView().findViewById(R.id.dPovratak);
@@ -127,7 +136,7 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
             @Override
             public void onClick (View v)
             {
-
+/*
                 Intent intent= new Intent();
                 intent.putParcelableArrayListExtra("knjige", knjige);
                 intent.putParcelableArrayListExtra("autori", autori);
@@ -137,7 +146,7 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
                         Activity.RESULT_OK,
                         intent
                 );
-
+*/
 
                 getFragmentManager().popBackStack();
             }
@@ -197,9 +206,12 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
             @Override
             public void onClick(View v) {
                 Knjiga a = knjigeRezultat.get(sRezultat.getSelectedItemPosition());
-                //Knjiga a= knjigeRezultat.get(1);
-                a.setKategorija(sKategorije.getSelectedItem().toString());
-                knjige.add(a);
+                Cursor c= (Cursor) sKategorije.getSelectedItem();
+                int INDEX_KATE = c.getColumnIndexOrThrow(BazaOpenHelper.KATEGORIJA_NAZIV );
+                String nazivK= c.getString(INDEX_KATE);
+                a.setKategorija(nazivK);
+                long vrati=bazaOpenHelper.dodajKnjigu(a);
+               /*knjige.add(a);
 
                 for (int i = 0; i < a.getAutori().size(); i++)
                 {  boolean isti=false;
@@ -218,7 +230,7 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
                         au.postavi(lista);
                         autori.add(au);
                     }
-                }
+                } */
 
             }
         });

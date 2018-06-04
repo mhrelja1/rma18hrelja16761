@@ -6,8 +6,8 @@
     
     <ImageView
         android:id="@+id/eNaslovna"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginLeft="5dp"
         android:src="@mipmap/ic_launcher"
         android:layout_marginTop="5dp"
@@ -31,8 +31,44 @@
         android:layout_below="@id/eNaziv"
         android:layout_toRightOf="@id/eNaslovna"
         android:layout_alignLeft="@id/eNaziv"
-        android:textSize="15sp"
-        />
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/eDatumObjavljivanja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eAutor"
+        android:layout_toRightOf="@id/eNaslovna"
+        android:layout_alignLeft="@id/eNaziv"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/eBrojStranica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eDatumObjavljivanja"
+        android:layout_toRightOf="@id/eNaslovna"
+        android:layout_alignLeft="@id/eNaziv"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/eOpis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eBrojStranica"
+        android:layout_toRightOf="@id/eNaslovna"
+        android:layout_alignLeft="@id/eNaziv"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/dPreporuci"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/eOpis"
+        android:layout_toRightOf="@+id/eNaslovna"
+        android:layout_alignLeft="@id/eNaziv"
+        android:text="@string/preporuci" />
+
 
 
 

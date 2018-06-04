@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.lang.reflect.Array;
@@ -29,10 +33,11 @@ public class ListeFragment extends Fragment {
     OnItemClick oicA;
     OnItemClick oicK;
     ArrayList<String> unosi=new ArrayList<String>();
+    SimpleCursorAdapter simpleCursorAdapterK;
+    SimpleCursorAdapter simpleCursorAdapterA;
 
 
-
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode==REQUEST_CODE && resultCode==getActivity().RESULT_OK) {
 
@@ -45,18 +50,18 @@ public class ListeFragment extends Fragment {
             autori= data.getParcelableArrayListExtra("autori");
 
         }
-    }
+    }*/
 
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         final View iv=inflater.inflate(R.layout.fragment_liste, container, false);
 
-        if (savedInstanceState!=null)
+       /* if (savedInstanceState!=null)
         {
             unosi= savedInstanceState.getStringArrayList("kategorije");
             knjige= savedInstanceState.getParcelableArrayList("knjige");
             autori= savedInstanceState.getParcelableArrayList("autori");
-        }
+        }*/
 
 
         final ListView lista=(ListView)iv.findViewById(R.id.listaKategorija);
@@ -64,17 +69,20 @@ public class ListeFragment extends Fragment {
         final Button dPretraga= (Button) iv.findViewById(R.id.dPretraga);
         final Button dDodajKategoriju= (Button) iv.findViewById(R.id.dDodajKategoriju);
         Button dDodajKnjigu= (Button) iv.findViewById(R.id.dDodajKnjigu);
-
         final ArrayAdapter<String> zaPrikazKategorija=new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, unosi);
         final FilterAdapter adapter=new FilterAdapter(getActivity(), unosi);
-        final AdapterAutor zaPrikazAutora= new AdapterAutor(getActivity(), autori);
-
+        //final AdapterAutor zaPrikazAutora= new AdapterAutor(getActivity(), autori);
         Button kategorija= (Button) iv.findViewById(R.id.dKategorije);
         final Button autor= (Button) iv.findViewById(R.id.dAutori);
         final FragmentManager fragmentManager= getActivity().getFragmentManager();
         final FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-
         final Configuration configuration= getActivity().getResources().getConfiguration();
+
+        final BazaOpenHelper bazaOpenHelper= new BazaOpenHelper(getActivity());
+        final SQLiteDatabase db= bazaOpenHelper.getReadableDatabase();
+
+
+
 
         Button dDodajOnline= (Button) iv.findViewById(R.id.dDodajOnline);
         dDodajOnline.setOnClickListener(new View.OnClickListener()
@@ -83,13 +91,13 @@ public class ListeFragment extends Fragment {
             public void onClick(View v)
             {
                 FragmentOnline fo=new FragmentOnline();
-                Bundle argumenti = new Bundle();
+             /*   Bundle argumenti = new Bundle();
                 argumenti.putStringArrayList("unosi", unosi);
                 argumenti.putParcelableArrayList("knjige", knjige);
                 argumenti.putParcelableArrayList("autori", autori);
 
                 fo.setArguments(argumenti);
-                fo.setTargetFragment(ListeFragment.this, 5);
+                fo.setTargetFragment(ListeFragment.this, 5);*/
                 fragmentTransaction.replace(R.id.f0, fo).addToBackStack(null).commit();
             }
         });
@@ -104,7 +112,10 @@ public class ListeFragment extends Fragment {
                 dPretraga.setVisibility(View.VISIBLE);
                 dDodajKategoriju.setVisibility(View.VISIBLE);
                 unos.setVisibility(View.VISIBLE);
-                lista.setAdapter(zaPrikazKategorija);
+                Cursor c = db.rawQuery("SELECT  * FROM "+BazaOpenHelper.DATABASE_TABLE_KATE, null);
+                simpleCursorAdapterK= new SimpleCursorAdapter ( getActivity(), android.R.layout.simple_list_item_1 ,c, new String []{ BazaOpenHelper.KATEGORIJA_NAZIV }, new int []{ android.R.id.text1 }, 0 );
+
+                lista.setAdapter(simpleCursorAdapterK);
 
                 try
                 {
@@ -116,7 +127,7 @@ public class ListeFragment extends Fragment {
                 lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        oicK.onItemClickedKategorija(zadnjiKliknutAutor, knjige, unosi.get(i) );
+                        oicK.onItemClicked(zadnjiKliknutAutor, i );
                     }
                 });
 
@@ -133,8 +144,10 @@ public class ListeFragment extends Fragment {
                 dPretraga.setVisibility(View.GONE);
                 dDodajKategoriju.setVisibility(View.GONE);
                 unos.setVisibility(View.GONE);
-
-                lista.setAdapter(zaPrikazAutora);
+                Cursor c = db.rawQuery("SELECT  * FROM "+BazaOpenHelper.DATABASE_TABLE_AUTOR, null);
+                simpleCursorAdapterA=  new SimpleCursorAdapter ( getActivity(), android.R.layout.simple_list_item_1 ,c, new String []{ BazaOpenHelper.AUTOR_IME }, new int []{ android.R.id.text1 }, 0 );
+                lista.setAdapter(simpleCursorAdapterA);
+                // lista.setAdapter(zaPrikazAutora);
 
                 try
                 {
@@ -146,7 +159,7 @@ public class ListeFragment extends Fragment {
                 lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        oicA.onItemClickedAutor(unosi, zadnjiKliknutAutor, autori, autori.get(i).getImeAutora() );
+                        oicA.onItemClicked(zadnjiKliknutAutor, i );
                     }
                 });
             }
@@ -167,11 +180,13 @@ public class ListeFragment extends Fragment {
         dDodajKategoriju.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                unosi.add(unos.getText().toString());
+                //unosi.add(unos.getText().toString());
+                long rez=bazaOpenHelper.dodajKategoriju(unos.getText().toString());
                 adapter.notifyDataSetChanged();
-                zaPrikazKategorija.notifyDataSetChanged();
+//                simpleCursorAdapterK.notifyDataSetChanged();
                 unos.setText("");
                 dDodajKategoriju.setEnabled(false);
+
 
             }
         });
@@ -180,13 +195,13 @@ public class ListeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                     DodavanjeKnjigeFragment dk = new DodavanjeKnjigeFragment();
-                    Bundle argumenti = new Bundle();
+                    /*Bundle argumenti = new Bundle();
                     argumenti.putStringArrayList("unosi", unosi);
                     argumenti.putParcelableArrayList("knjige", knjige);
                     argumenti.putParcelableArrayList("autori", autori);
                     dk.setArguments(argumenti);
 
-                    dk.setTargetFragment(ListeFragment.this, 1);
+                    dk.setTargetFragment(ListeFragment.this, 1);*/
 
                 if (configuration.orientation== Configuration.ORIENTATION_LANDSCAPE )
                 {
@@ -202,19 +217,18 @@ public class ListeFragment extends Fragment {
         return iv;
     }
 
-    @Override
+   /* @Override
     public void onSaveInstanceState (Bundle savedInstanceState)
     {
         savedInstanceState.putStringArrayList("kategorije", unosi);
         savedInstanceState.putParcelableArrayList("autori", autori);
         savedInstanceState.putParcelableArrayList("knjige", knjige);
-    }
+    }*/
 
 
 
     public interface OnItemClick {
-        public void onItemClickedAutor(ArrayList<String> k, int zadnjiKliknutA, ArrayList<Autor> autori, String imeAutora);
-        public void onItemClickedKategorija(int zadnjiKliknutA, ArrayList<Knjiga> knjige, String kategorija);
+        public void onItemClicked(int zadnjiKliknutA, int id);
     }
 
 

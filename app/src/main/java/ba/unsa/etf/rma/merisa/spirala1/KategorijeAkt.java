@@ -16,6 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.stetho.Stetho;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,35 +29,14 @@ public class KategorijeAkt extends AppCompatActivity implements ListeFragment.On
 
 
     @Override
-    public void onItemClickedAutor(ArrayList<String> k, int zadnjiKliknutA, ArrayList<Autor> autori, String imeAutora) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Configuration configuration = getResources().getConfiguration();
-
-        KnjigeFragment kf = new KnjigeFragment();
-        Bundle arg = new Bundle();
-        arg.putParcelableArrayList("listaAutora", autori);
-        arg.putString("odabraniAutor", imeAutora);
-        arg.putInt("zadnjiKliknutA", zadnjiKliknutA);
-        kf.setArguments(arg);
-        if (configuration.orientation== Configuration.ORIENTATION_LANDSCAPE )
-        {
-            fragmentTransaction.replace(R.id.mjesto2, kf).addToBackStack(null).commit();
-
-        }
-        else {
-        fragmentTransaction.replace(R.id.f0, kf).addToBackStack(null).commit(); }
-    }
-
-    @Override
-    public void onItemClickedKategorija(int zadnjiKliknutA, ArrayList<Knjiga> knjige, String kategorija) {
+    public void onItemClicked(int zadnjiKliknutA, int id) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Configuration configuration = getResources().getConfiguration();
 
         KnjigeFragment kf = new KnjigeFragment();
         Bundle arg = new Bundle();
         arg.putInt("zadnjiKliknutA", zadnjiKliknutA);
-        arg.putParcelableArrayList("listaKnjiga", knjige);
-        arg.putString("nazivKategorije", kategorija);
+        arg.putInt("id", id);
 
         kf.setArguments(arg);
         if (configuration.orientation== Configuration.ORIENTATION_LANDSCAPE )
@@ -71,6 +52,7 @@ public class KategorijeAkt extends AppCompatActivity implements ListeFragment.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_kategorije_akt);
         Configuration configuration = getResources().getConfiguration();
 

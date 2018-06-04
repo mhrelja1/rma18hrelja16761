@@ -113,11 +113,20 @@ public class Knjiga implements Parcelable {
         { return autor.getImeAutora();}
 
     }
-    public String getOpis () { return opis; }
+    public String getOpis () {return opis; }
     public String getDatumObjavljivanja () {return datumObjavljivanja;}
     public int getBrojStranica () { return brojStranica; }
     public String getKategorija() { return kategorija; }
     public boolean getJedan () {return jedan;}
+    public String AutorZaMail () { if (jedan==true) return autor.getImeAutora();
+      else
+        {
+            if (autori.size()==0) return ("/");
+            else return autori.get(0).getImeAutora();
+
+        }
+    }
+
 
 
     @Override

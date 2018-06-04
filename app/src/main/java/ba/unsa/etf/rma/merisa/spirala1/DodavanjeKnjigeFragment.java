@@ -7,6 +7,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
@@ -19,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
@@ -54,7 +57,7 @@ public class DodavanjeKnjigeFragment extends Fragment{
 
         final View iv = inflater.inflate(R.layout.fragment_dodavanje_knjige, container, false);
 
-        if (getArguments().containsKey("unosi"))
+        /*if (getArguments().containsKey("unosi"))
         {
             kategorije= getArguments().getStringArrayList("unosi");
         }
@@ -65,11 +68,15 @@ public class DodavanjeKnjigeFragment extends Fragment{
         if ( getArguments().containsKey("autori"))
         {
             autori= getArguments().getParcelableArrayList("autori");
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, kategorije );
+        }*/
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, kategorije );
 
         final Spinner sKategorijaKnjige= (Spinner)iv.findViewById(R.id.sKategorijaKnjige);
-        sKategorijaKnjige.setAdapter(adapter);
+        final BazaOpenHelper bazaOpenHelper= new BazaOpenHelper(getActivity());
+        SQLiteDatabase db= bazaOpenHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT  * FROM "+BazaOpenHelper.DATABASE_TABLE_KATE, null);
+        SimpleCursorAdapter simpleCursorAdapterK= new SimpleCursorAdapter( getActivity(), android.R.layout.simple_list_item_1 ,c, new String []{ BazaOpenHelper.KATEGORIJA_NAZIV }, new int []{ android.R.id.text1 }, 0 );
+        sKategorijaKnjige.setAdapter(simpleCursorAdapterK);
 
         final EditText imeAutora= (EditText) iv.findViewById(R.id.imeAutora);
         final EditText nazivKnjige= (EditText) iv.findViewById(R.id.nazivKnjige);
@@ -99,13 +106,15 @@ public class DodavanjeKnjigeFragment extends Fragment{
                                             public void onClick (View v)
                                             {
 
-                                                ArrayList<Knjiga> k = new ArrayList<Knjiga>();
-
                                                 Knjiga knj = new Knjiga(uri.toString(), nazivKnjige.getText().toString(), sKategorijaKnjige.getSelectedItem().toString());
-                                                knjige.add(knj);
-                                                k.add(knj);
-                                                Autor a = new Autor(imeAutora.getText().toString(), k);
+                                                Autor a = new Autor(imeAutora.getText().toString(), "00");
                                                 knj.setAutor(a);
+                                                long id=bazaOpenHelper.dodajKnjigu(knj);
+                                                imeAutora.setText("");
+                                                nazivKnjige.setText("");
+
+                                               /*
+                                                knjige.add(knj);
 
                                                 imeAutora.setText("");
                                                 nazivKnjige.setText("");
@@ -132,7 +141,7 @@ public class DodavanjeKnjigeFragment extends Fragment{
                                                         listaKnjiga.add(knjige.get(knjige.size()-1));
                                                         autori.add(new Autor (knjige.get(knjige.size()-1).getAutor().getImeAutora(), listaKnjiga));
                                                     }
-                                                }
+                                                } */
                                             }
                                         }
         );
@@ -147,7 +156,7 @@ public class DodavanjeKnjigeFragment extends Fragment{
                                             imeAutora.setText("");
                                             nazivKnjige.setText("");
 
-                                            Intent intent=new Intent();
+                                            /*Intent intent=new Intent();
                                             intent.putParcelableArrayListExtra("knjige", knjige);
                                             intent.putParcelableArrayListExtra("autori", autori);
 
@@ -155,7 +164,7 @@ public class DodavanjeKnjigeFragment extends Fragment{
                                                     getTargetRequestCode(),
                                                     Activity.RESULT_OK,
                                                     intent
-                                            );
+                                            );*/
 
                                             FragmentManager fragmentManager= getFragmentManager();
                                             fragmentManager.popBackStack();

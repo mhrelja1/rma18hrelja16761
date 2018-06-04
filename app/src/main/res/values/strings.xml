@@ -12,6 +12,10 @@
     <string name="upisi.knjigu">Add book</string>
     <string name="ponisti">Cancel</string>
     <string name="povratak">Go back</string>
+    <string name="preporuci">Recommend</string>
+    <string name="posalji">Send</string>
+
+
 
 
 </resources>
